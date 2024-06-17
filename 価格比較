@@ -1,0 +1,33 @@
+!pip install yfinance
+
+import yfinance as yf
+import pandas as pd
+import datetime
+import matplotlib.pyplot as plt
+%matplotlib inline
+
+codelist=["USDJPY=X", "^GSPC"]
+displist=["S&P500 USD ","S&P500 JPY"]
+
+start = datetime.date(2021,1,1)
+end = datetime.date.today()
+
+data_stock = yf.download(codelist, start=start, end=end)["Adj Close"]
+
+data_stock[displist[1]]=data_stock[codelist[0]]*data_stock[codelist[1]]
+
+
+fig, ax1 = plt.subplots(figsize=(8, 4.5),facecolor="white")
+
+ax2 = ax1.twinx()
+
+
+ax1.plot(data_stock[codelist[1]].dropna(),
+color="blue", label= displist[1],linewidth=2, alpha=0.5)
+
+handler1, label1 = ax1.get_legend_handles_labels()
+handler2, label2 = ax2.get_legend_handles_labels()
+
+ax1.legend(handler1 + handler2, label1 + label2, loc=2, borderaxespad=0.5)
+ax1.tick_params(axis="x", labelrotation=45)
+plt.show()
